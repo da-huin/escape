@@ -25,12 +25,15 @@ class Browser():
     def _create_session(self):
         options = webdriver.ChromeOptions()
         options.add_argument('headless')
+        options.add_argument('--no-sandbox')
+        options.add_argument("--single-process")
+
         options.add_argument("disable-gpu")
         options.add_argument(
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36")
         options.add_argument('window-size=1920,1080')
 
-        driver = webdriver.Chrome('chromedriver', chrome_options=options)
+        driver = webdriver.Chrome('chromedriver', options=options)
         driver.implicitly_wait(5)
 
         return driver
@@ -126,7 +129,7 @@ class Worker():
 
 class Slack():
     def __init__(self):
-        self.url = 'https://hooks.slack.com/services/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'
+        self.url = 'https://hooks.slack.com/services/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'
 
     def send(self, message):
         return requests.post(self.url, data=json.dumps({'text': message}, ensure_ascii=False).encode('utf-8'), headers={'Content-type': 'application/json'})
@@ -280,6 +283,7 @@ try:
     Slack().send(message)
 except:
     Slack().send(traceback.format_exc())
+    raise
 finally:
     if driver:
         driver.quit()
