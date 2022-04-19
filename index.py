@@ -265,7 +265,7 @@ try:
     available_dates = worker.get_available_dates()
 
     assert len(set(available_dates)) == len(available_dates)
-    
+
     schedules = []
 
     for i, dt in enumerate(tqdm(available_dates)):
@@ -277,7 +277,7 @@ try:
         #     break
         # break
 
-    basename = datetime.datetime.now().strftime("%Y-%m-%d %H-%M-%S")
+    basename = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
     os.makedirs('dest', exist_ok=True)
     with open(f'dest/{basename}.json', 'w', encoding='utf-8') as fp:
         fp.write(json.dumps(schedules, ensure_ascii=False, indent=4))
