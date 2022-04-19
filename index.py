@@ -115,16 +115,21 @@ class Worker():
         '''
             prev | next
         '''
+        click = False
         for el in self.driver.find_elements(by=By.CSS_SELECTOR, value=
             f'''div.datepicker--nav-action[data-action="{direction}"]'''):
             if el.get_attribute('class').find('-disabled-') == -1:
                 el.click()
+                click = True
+
+        if not click:
+            raise Exception('cannot found calendar direction')
                 
         time.sleep(3)
     
     def get_arrow_direction(self):
         return 'prev' if len(self.driver.find_elements(by=By.CSS_SELECTOR, value=
-            f'''div.datepicker--nav-action[data-action="prev"]''')) else 'next'
+            f'''div.datepicker--nav-action.-disabled-[data-action="next"]''')) else 'next'
         
 
 class Slack():
@@ -259,8 +264,10 @@ try:
 
     available_dates = worker.get_available_dates()
 
-
+    assert len(set(available_dates)) == len(available_dates)
+    
     schedules = []
+
     for i, dt in enumerate(tqdm(available_dates)):
         schedules.append({
             'date': dt.strftime('%Y-%m-%d'),
